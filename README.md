@@ -24,7 +24,7 @@ Detailed Steps and Code
 		o	Create a new project (e.g., ECommercePlatform).
 		o	Navigate to Repos and create a new repository.
 	2.	Clone the Repository Locally
-```
+```bash
 git clone https://dev.azure.com/yourorganization/ECommercePlatform/_git/ECommercePlatform
 cd ECommercePlatform
 ```
