@@ -27,12 +27,13 @@ Detailed Steps and Code
 ```bash
 git clone https://dev.azure.com/yourorganization/ECommercePlatform/_git/ECommercePlatform
 cd ECommercePlatform
+
 ```
 
 	3.	Add Project Files Add your e-commerce platform source code to this repository.
 	4.	Commit and Push
 
-```
+```bash
 git add .
 git commit -m "Initial commit"
 git push origin main
@@ -45,7 +46,7 @@ git push origin main
 		o	Select the repository you created for the e-commerce platform.
 	3.	Configure Pipeline
 		o	Choose Starter Pipeline and replace its content with the following YAML configuration:
-```
+```yaml
 trigger:
 - main
 
@@ -136,7 +137,7 @@ stages:
 
 3. Docker and Kubernetes Configuration
 	1.	Dockerfile
-```
+```DockerFile
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -160,7 +161,7 @@ ENTRYPOINT ["dotnet", "ECommercePlatform.dll"]
 
 	2.	Kubernetes Deployment YAML (manifests/deployment.yaml)
 	
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -188,7 +189,7 @@ spec:
 4. Implementing Rolling Updates and Blue-Green Deployments
 	1.	Rolling Updates
 		o	Ensure the strategy section in your deployment YAML is configured for rolling updates.
-```
+```yaml
 spec:
   strategy:
     type: RollingUpdate
@@ -201,7 +202,7 @@ spec:
 		o	Set up two environments (e.g., staging and production).
 		o	Deploy to staging first, validate, and then switch traffic to production.
 		
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
