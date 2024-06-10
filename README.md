@@ -1,51 +1,45 @@
-# azure-pipeline
-
 Project: Azure DevOps Pipeline for E-Commerce Platform
 
 Overview
 
 This project involves the development and implementation of a CI/CD pipeline using Azure DevOps for an e-commerce platform. The main goals are to streamline the deployment process, automate the build, test, and deployment stages, and implement strategies to minimize downtime during deployments.
-Tools and Technologies
 
-•	Azure DevOps: Repos, Pipelines, Artifacts
-•	Docker: Containerization
-•	AKS (Azure Kubernetes Service): Orchestration
-•	ACR (Azure Container Registry): Container registry
+Tools and Technologies
+	•	Azure DevOps: Repos, Pipelines, Artifacts
+	•	Docker: Containerization
+	•	AKS (Azure Kubernetes Service): Orchestration
+	•	ACR (Azure Container Registry): Container registry
 
 Key Achievements
-•	Automated build, test, and deployment stages, reducing deployment time by 50%.
-•	Implemented rolling updates and blue-green deployments to minimize downtime.
+	•	Automated build, test, and deployment stages, reducing deployment time by 50%.
+	•	Implemented rolling updates and blue-green deployments to minimize downtime.
 
 Detailed Steps and Code
 
 1. Setting Up Azure DevOps Repos
-	1.	Create a New Repository
-		o	Go to Azure DevOps organization.
-		o	Create a new project (e.g., ECommercePlatform).
-		o	Navigate to Repos and create a new repository.
-	2.	Clone the Repository Locally
+	I.	Create a New Repository
+		i.	Go to Azure DevOps organization.
+		ii.	Create a new project (e.g., ECommercePlatform).
+		iii.	Navigate to Repos and create a new repository.
+	II.	Clone the Repository Locally
 ```bash
 git clone https://dev.azure.com/yourorganization/ECommercePlatform/_git/ECommercePlatform
-cd ECommercePlatform
-
+cd EcommercePlatform
 ```
-
-	3.	Add Project Files Add your e-commerce platform source code to this repository.
-	4.	Commit and Push
-
+	III. Add Project Files Add your e-commerce platform source code to this repository.
+	IV.	Commit and Push
 ```bash
 git add .
 git commit -m "Initial commit"
 git push origin main
 ```
-
 2. Creating the Azure DevOps Pipeline
-	1.	Navigate to Pipelines
-		o	In your Azure DevOps project, go to Pipelines and create a new pipeline.
-	2.	Select Repository
-		o	Select the repository you created for the e-commerce platform.
-	3.	Configure Pipeline
-		o	Choose Starter Pipeline and replace its content with the following YAML configuration:
+	I.	Navigate to Pipelines
+		i.	In your Azure DevOps project, go to Pipelines and create a new pipeline.
+	II.	Select Repository
+		i.	Select the repository you created for the e-commerce platform.
+	III.	Configure Pipeline
+		i.	Choose Starter Pipeline and replace its content with the following YAML configuration:
 ```yaml
 trigger:
 - main
@@ -136,8 +130,9 @@ stages:
 ```
 
 3. Docker and Kubernetes Configuration
-	1.	Dockerfile
-```DockerFile
+	
+	I.	Dockerfile
+```Dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -159,8 +154,7 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ECommercePlatform.dll"]
 ```
 
-	2.	Kubernetes Deployment YAML (manifests/deployment.yaml)
-	
+	II.	Kubernetes Deployment YAML (manifests/deployment.yaml)
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -184,11 +178,9 @@ spec:
         ports:
         - containerPort: 80
 ```
-
-
 4. Implementing Rolling Updates and Blue-Green Deployments
-	1.	Rolling Updates
-		o	Ensure the strategy section in your deployment YAML is configured for rolling updates.
+	I.	Rolling Updates
+		i.	Ensure the strategy section in your deployment YAML is configured for rolling updates.
 ```yaml
 spec:
   strategy:
@@ -197,12 +189,11 @@ spec:
       maxUnavailable: 1
       maxSurge: 1
 ```
-
-	2.	Blue-Green Deployments
-		o	Set up two environments (e.g., staging and production).
-		o	Deploy to staging first, validate, and then switch traffic to production.
-		
+	II.	Blue-Green Deployments
+		i.	Set up two environments (e.g., staging and production).
+		ii.	Deploy to staging first, validate, and then switch traffic to production.
 ```yaml
+Copy code
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -228,8 +219,6 @@ spec:
         ports:
         - containerPort: 80
 ```
-		
 Summary
 This project demonstrates the creation of a robust CI/CD pipeline using Azure DevOps for an e-commerce platform. The pipeline automates the build, test, and deployment stages, and implements rolling updates and blue-green deployments to minimize downtime. With these practices, the deployment process is streamlined, and downtime is significantly reduced, enhancing the overall efficiency and reliability of the e-commerce platform.
-
 
