@@ -227,7 +227,6 @@ spec:
         image: youracr.azurecr.io/ecommerce-platform:$(tag)
         ports:
         - containerPort: 80
-		
 ```
 		
 Summary
