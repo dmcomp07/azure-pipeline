@@ -1,0 +1,86 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  dockerRegistryServiceConnection: '<your-service-connection>'
+  imageRepository: 'ecommerce-platform'
+  containerRegistry: 'youracr.azurecr.io'
+  dockerfilePath: 'Dockerfile'
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '5.x'
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+
+    - script: 'dotnet build --configuration $(buildConfiguration)'
+      displayName: 'Build the application'
+
+    - task: Docker@2
+      inputs:
+        containerRegistry: '$(dockerRegistryServiceConnection)'
+        repository: '$(imageRepository)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dockerfilePath)'
+        tags: |
+          $(tag)
+
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    environment: 'staging'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Kubernetes@1
+            inputs:
+              connectionType: 'Azure Resource Manager'
+              azureSubscriptionEndpoint: '<your-azure-subscription>'
+              azureResourceGroup: '<your-resource-group>'
+              kubernetesCluster: '<your-k8s-cluster>'
+              namespace: 'staging'
+              command: 'apply'
+              useConfigurationFile: true
+              configuration: 'manifests/deployment.yaml'
+              secretType: 'dockerRegistry'
+              containerRegistryType: 'Azure Container Registry'
+              containerRegistry: 'youracr.azurecr.io'
+              imagePullSecret: '<image-pull-secret>'
+              arguments: '-f manifests/deployment.yaml'
+
+- stage: Production
+  dependsOn: Deploy
+  jobs:
+  - deployment: Production
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: Kubernetes@1
+            inputs:
+              connectionType: 'Azure Resource Manager'
+              azureSubscriptionEndpoint: '<your-azure-subscription>'
+              azureResourceGroup: '<your-resource-group>'
+              kubernetesCluster: '<your-k8s-cluster>'
+              namespace: 'production'
+              command: 'apply'
+              useConfigurationFile: true
+              configuration: 'manifests/deployment.yaml'
+              secretType: 'dockerRegistry'
+              containerRegistryType: 'Azure Container Registry'
+              containerRegistry: 'youracr.azurecr.io'
+              imagePullSecret: '<image-pull-secret>'
+              arguments: '-f manifests/deployment.yaml'

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-platform
+  labels:
+    app: ecommerce-platform
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ecommerce-platform
+  template:
+    metadata:
+      labels:
+        app: ecommerce-platform
+    spec:
+      containers:
+      - name: ecommerce-platform
+        image: youracr.azurecr.io/ecommerce-platform:$(tag)
+        ports:
+        - containerPort: 80
